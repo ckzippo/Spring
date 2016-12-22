@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ckzippo.login.AdminMapper">
+
+    <select id="getAdminByAcc" parameterType="java.lang.String" resultType="com.ckzippo.login.Admin">
+        SELECT acc, password, role, deptid
+        FROM BackStageAdmin
+        WHERE acc = #{acc, jdbcType=VARCHAR}
+    </select>
+
+    <select id="getAllAdmin" resultType="com.ckzippo.login.Admin">
+        SELECT acc, password, role, deptid
+        FROM BackStageAdmin
+    </select>
+
+</mapper>
