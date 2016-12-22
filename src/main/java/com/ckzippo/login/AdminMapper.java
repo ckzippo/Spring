@@ -11,7 +11,8 @@ import java.util.List;
  * Date:16/12/21
  * TIME:下午3:27
  */
+@Repository
 public interface AdminMapper {
-    public Admin getAdminByAcc(@Param("acc") String acc);
-    public List<Admin> getAllAdmin();
+    Admin getAdminByAcc(@Param("acc") String acc);
+    List<Admin> getAllAdmin();
 }
