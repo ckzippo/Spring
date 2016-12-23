@@ -1,10 +1,12 @@
 package com.ckzippo.login;
 
+import com.ckzippo.Enum.SessionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Created with IDEA
@@ -19,15 +21,6 @@ public class LoginController {
     @Autowired
     AdminMapper adminMapper;
 
-    @RequestMapping("/test")
-    public String test() {
-        String acc = "ckzippo";
-        String password = "123";
-        Admin admin1 = adminMapper.getAdminByAcc(acc);
-        System.out.println(admin1);
-        return "success";
-    }
-
     @RequestMapping("/adminlogin")
     public String adminLogin(HttpServletRequest request) {
         String acc = request.getParameter("acc");
@@ -37,7 +30,12 @@ public class LoginController {
         if (admin == null || !admin.getPassword().equals(password)) {
             return "error";
         } else {
-            return "success";
+            HttpSession session = request.getSession();
+            session.setAttribute(SessionEnum.USERNAME.getSessionName(), acc);
+            session.setAttribute(SessionEnum.PASSWORD.getSessionName(), password);
+            session.setAttribute(SessionEnum.AUTHENTICATION.getSessionName(), "true");
+            session.setAttribute(SessionEnum.DEPTID.getSessionName(), admin.getDeptid());
+            return "main";
         }
     }
 

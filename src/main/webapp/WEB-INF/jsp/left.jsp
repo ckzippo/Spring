@@ -24,8 +24,8 @@
     <ul>
         <li class="submenu"> <a href="#"><i class="icon icon-user"></i> <span>个人管理</span></a>
             <ul>
-                <li><a href="/qryUser">查找用户</a></li>
-                <li><a href="/showDept">增加用户</a></li>
+                <li><a href="/user/qryuser">查找用户</a></li>
+                <li><a href="/user/showDept">增加用户</a></li>
             </ul>
         </li>
 
