@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,7 +43,7 @@ public class UserController {
      */
     @RequestMapping("/moduserFromadd")
     public String moduserFromadd(HttpServletRequest request) {
-        return "modUser";
+        return "modeUser";
     }
 
     /**
@@ -124,7 +123,16 @@ public class UserController {
             deptid = String.valueOf(session.getAttribute(SessionEnum.DEPTID.getSessionName()));
         }
         List<Department> departmentList = InvokeHttpUtil.QryChildDeptById(deptid);
-        modelAndView.addObject("departmentlist", departmentList);
+        List<User> userList = InvokeHttpUtil.QryChildMemById(deptid);
+
+        if (departmentList != null) {
+            modelAndView.addObject("departmentlist", departmentList);
+        }
+
+        if (userList != null) {
+            modelAndView.addObject("userlist", userList);
+        }
+
         modelAndView.setViewName("qryDept");
         return modelAndView;
     }

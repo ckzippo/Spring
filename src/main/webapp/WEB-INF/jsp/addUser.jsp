@@ -41,7 +41,7 @@
 
                         <%--TODO 自动验证各个字段是否非空--%>
                         <div class="widget-content">
-                            <form action="/addUser?flag=invoke" method="post" class="form-horizontal">
+                            <form action="/user/addUserinvoke" method="post" class="form-horizontal">
                                 <div class="control-group">
                                     <label class="control-label">账号 :</label>
                                     <div class="controls">

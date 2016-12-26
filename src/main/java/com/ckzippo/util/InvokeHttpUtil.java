@@ -2,6 +2,7 @@ package com.ckzippo.util;
 
 import com.ckzippo.Enum.HTTPEnum;
 import com.ckzippo.deptmanage.Department;
+import com.ckzippo.groupmanage.Group;
 import com.ckzippo.usermanage.User;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -397,6 +398,106 @@ public class InvokeHttpUtil {
     }
 
     /**
+     * 根据部门ID查询子成员信息
+     * @param id
+     * @return
+     */
+    public static ArrayList<User> QryChildMemById(String id) {
+        logger.info("根据ID: "+id + "查询了子部门成员");
+        ArrayList<User> users = new ArrayList<User>();
+        String result;
+        String url = HTTPEnum.QRYDEPT.toString();
+
+        //查询非根目录
+        NameValuePair[] data_nonroot = {
+                new NameValuePair("USR_REQ", "1"),
+                new NameValuePair("DEPT_ID", id),
+        };
+
+        //查询根目录
+        NameValuePair[] data_root = {
+                new NameValuePair("USR_REQ", "1"),
+        };
+
+        NameValuePair[] data;
+        if (id.equals("0")){
+            data = data_root;
+        } else {
+            data = data_nonroot;
+        }
+
+        result = Invoke(url, data);
+        JSONObject jsonObject = new JSONObject(result);
+        if (jsonObject.get("RET").toString().equals("SUC")) {
+            if (!jsonObject.has("LST_M")) {
+                return null;
+            }
+            JSONArray jsonArrayMem = new JSONArray(jsonObject.get("LST_M").toString());
+            for (int i = 0; i < jsonArrayMem.length(); i++) {
+                User user = new User();
+                JSONObject userObject = new JSONObject(jsonArrayMem.getJSONObject(i).toString());
+
+                if (userObject.has("USR_ACC")) {
+                    user.setUseracc(userObject.getString("USR_ACC"));
+                }
+
+                if (userObject.has("USR_ID")) {
+                    user.setUserid(userObject.getString("USR_ID"));
+                }
+
+                if (userObject.has("USR_NAME")) {
+                    user.setUsername(userObject.getString("USR_NAME"));
+                }
+
+                if (userObject.has("SIGN")) {
+                    user.setSign(userObject.getString("SIGN"));
+                }
+
+                if (userObject.has("AVATAR")) {
+                    user.setAvatar(Integer.valueOf(userObject.getString("AVATAR")));
+                }
+
+                if (userObject.has("SEX")) {
+
+                }
+
+                if (userObject.has("BIRTHDAY")) {
+                    user.setBirthday(userObject.getString("BIRTHDAY"));
+                }
+
+                if (userObject.has("NATION")) {
+
+                }
+
+                if (userObject.has("DEPT_ID")) {
+                    user.setDeptid(userObject.getString("DEPT_ID"));
+                }
+
+                if (userObject.has("TEL")) {
+                    user.setTelephone(userObject.getString("TEL"));
+                }
+
+                if (userObject.has("MPHONE")) {
+                    user.setMobilephone(userObject.getString("MPHONE"));
+                }
+
+                if (userObject.has("EMAIL")) {
+                    user.setEmail(userObject.getString("EMAIL"));
+                }
+
+                if (userObject.has("USR_LIQ")) {
+
+                }
+                logger.info(user);
+                users.add(user);
+            }
+        } else {
+            return null;
+        }
+        return users;
+    }
+
+    /**
      * 为用户赋予权限
      * @param id 用户id
      * @param role 权限标示
@@ -422,6 +523,91 @@ public class InvokeHttpUtil {
     }
 
     /**
+     * 根据群名称模糊查找群
+     * @param name
+     * @return
+     */
+    public static ArrayList<Group> QryGroupByName(String name) {
+        logger.info("根据" + name + "查询群列表");
+        String result;
+        String url = HTTPEnum.QRYGROUP.toString();
+
+        ArrayList<Group> groups = new ArrayList<Group>();
+
+        NameValuePair[] data = {
+                new NameValuePair("USR_REQ", "29297"),
+                new NameValuePair("WILDCARDS", name),
+        };
+        result = Invoke(url, data);
+        if (!result.startsWith("{"))
+            return null;
+        JSONObject jsonObject = new JSONObject(result);
+        if (jsonObject.get("RET").toString().equals("SUC")) {
+            if (!jsonObject.has("LST") || jsonObject.get("LST").equals(null)) {
+                return null;
+            }
+            JSONArray jsonArray = jsonObject.getJSONArray("LST");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                Group group = new Group();
+                JSONObject groupObject = new JSONObject(jsonArray.get(i).toString());
+
+                if (groupObject.has("GP_ID")) {
+                    group.setId(Integer.valueOf(groupObject.get("GP_ID").toString()));
+                }
+
+                if (groupObject.has("GP_NAME")) {
+                    group.setGp_name(groupObject.get("GP_NAME").toString());
+                }
+
+                if (groupObject.has("GP_NOTE")) {
+                    group.setNote(groupObject.get("GP_NOTE").toString());
+                }
+                logger.info(group);
+                groups.add(group);
+            }
+            return groups;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 根据群ID查询群信息
+     * @param id
+     * @return
+     */
+    public static Group QryGroupByID(String id) {
+        logger.info("查询了ID:" + id + "的群信息");
+        String result;
+        String url = HTTPEnum.QRYGROUP.toString();
+        NameValuePair[] data = {
+                new NameValuePair("USR_REQ", "1"),
+                new NameValuePair("GP_ID", id),
+        };
+
+        Group group = new Group();
+
+        result = InvokeHttpUtil.Invoke(url, data);
+        JSONObject jsonObject = new JSONObject(result);
+        if (jsonObject.get("RET").toString().equals("SUC")) {
+
+            JSONArray jsonArray = new JSONArray(jsonObject.get("LST").toString());
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject groupJson = new JSONObject(jsonArray.getJSONObject(i).toString());
+                if (groupJson.has("GP_NAME")) {
+                    group.setGp_name(groupJson.get("GP_NAME").toString());
+                }
+                if (groupJson.has("GP_NOTE")) {
+                    group.setNote(groupJson.get("GP_NOTE").toString());
+                }
+                group.setId(Integer.valueOf(id));
+            }
+            return group;
+        } else {
+            return null;
+        }
+    }
+    /**
      * 重置用户密码
      * @param id 用户ID
      * @param password 用户密码
@@ -443,6 +629,50 @@ public class InvokeHttpUtil {
         JSONObject jsonObject = new JSONObject(result);
         result = jsonObject.get("RET").toString();
         return result.equals("SUC");
+    }
+
+    /**
+     * 修改群信息
+     * @param groupid
+     * @param groupname
+     * @param groupnote
+     * @return
+     */
+    public static boolean modGroup(String groupid, String groupname, String groupnote) {
+        logger.info("修改群:" + groupid + "名称为: " + groupname + " 群公告: "+groupnote);
+        String result = null;
+        String url = HTTPEnum.MODGROUP.toString();
+        NameValuePair[] data = {
+            new NameValuePair("USR_REQ", "29297"),
+            new NameValuePair("GP_NAME", groupname),
+            new NameValuePair("GP_NOTE", groupnote),
+            new NameValuePair("GP_ID", groupid),
+        };
+        result = Invoke(url, data);
+        JSONObject jsonObject = new JSONObject(result);
+        result = jsonObject.get("RET").toString();
+        return result.equals("SUC");
+    }
+
+    /**
+     * 根据群 ID 查询群主
+     * @param reqid
+     * @param groupid
+     * @return
+     */
+    public static String qryGroupOwner(String reqid, String groupid) {
+        logger.info("查询群ID: " + groupid + "的群主");
+        String result = null;
+        String url = HTTPEnum.QRYGROUP.toString();
+        NameValuePair[] data = {
+            new NameValuePair("USR_REQ", reqid),
+            new NameValuePair("GP_ID", groupid),
+        };
+
+        result = Invoke(url, data);
+        JSONObject jsonObject = new JSONObject(result);
+        JSONArray jsonArray = jsonObject.getJSONArray("LST");
+        return jsonArray.getJSONObject(0).getString("USR_ID");
     }
 
     public static void main(String[] args) {
@@ -469,6 +699,11 @@ public class InvokeHttpUtil {
             System.out.println(department);
         }*/
 
+       /* ArrayList<User> users = InvokeHttpUtil.QryChildMemById("320002");
+        for (User user :
+                users) {
+            System.out.println(user);
+        }*/
 
     }
 }

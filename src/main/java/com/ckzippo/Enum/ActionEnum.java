@@ -13,7 +13,9 @@ public enum ActionEnum {
     LOGIN("login",1),
     QRYUSER("qryuser", 2),
     MODUSER("modifyuser", 3),
-    ADDUSER("adduser", 4)
+    ADDUSER("adduser", 4),
+    QRYGROUP("qrygroup", 5),
+    MODGROUP("modgroup", 6)
     ;
 
     private String actionName;

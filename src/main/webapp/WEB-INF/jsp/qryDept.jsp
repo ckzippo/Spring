@@ -61,7 +61,12 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                ${requestScope.test}
+                                <c:forEach var="user" items="${userlist}">
+                                    <tr>
+                                        <td>${user.userid}</td>
+                                        <td>${user.username}</td>
+                                    </tr>
+                                </c:forEach>
                                 <c:forEach var="deptment" items="${departmentlist}">
                                     <tr>
                                         <td><input type="radio" id="deptid" name="deptid" value="${deptment.deptid}"></td>
@@ -141,7 +146,7 @@
     //    确定增加
     function confirm() {
         var deptid = <%=request.getParameter("deptid")%>
-        var action = "/addUser?deptid=" + deptid + "&flag=show";
+        var action = "/user/addUsershow?deptid=" + deptid;
         showDept.action = action;
         showDept.submit();
 
