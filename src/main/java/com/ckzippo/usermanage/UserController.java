@@ -43,7 +43,7 @@ public class UserController {
      */
     @RequestMapping("/moduserFromadd")
     public String moduserFromadd(HttpServletRequest request) {
-        return "modeUser";
+        return "modUser";
     }
 
     /**

@@ -27,7 +27,7 @@
     <script language="JavaScript" type="text/javascript">
 
         // 修改群信息
-        function modifyGroup() {
+        function modifyGroupMem() {
             var x = document.getElementsByName("id");
             var t = 0;
             for (var i = 0; i < x.length; i++) {
@@ -45,8 +45,8 @@
             }
         }
 
-        // 增加建群权限
-        function addCreateGroupAutority() {
+        // 查看群成员
+        function qryGroupMember() {
             var x = document.getElementsByName("id");
             var t = 0;
             for (var i = 0; i < x.length; i++) {
@@ -57,34 +57,12 @@
             }
 
             if (t == 1) {
-                showUser.action = "/user/addCreateGroupAuth";
-                showUser.submit();
+                showGroup.action = "/group/qryGroupMember";
+                showGroup.submit();
             } else {
-                alert("请选择一个用户");
+                alert("请选择一个群");
             }
         }
-
-        /**
-         * 重置密码
-         */
-        function resetPassword() {
-            var x = document.getElementsByName("id");
-            var t = 0;
-            for (var i = 0; i < x.length; i++) {
-                if (x[i].checked == true) {
-                    t = 1;
-                    break;
-                }
-            }
-
-            if (t == 1) {
-                showUser.action = "/user/resetpassword";
-                showUser.submit();
-            } else {
-                alert("请选择一个用户");
-            }
-        }
-
 
     </script>
 </head>
@@ -125,6 +103,8 @@
                 <ol>
                     <li>输入群名称关键字进行搜索</li>
                     <li>关键字尽量输入长一点,以免结果太多,反应慢</li>
+                    <li>修改群信息可以修改群名称、请公告</li>
+                    <li>查看群成员可以展示、新增、修改群成员</li>
                 </ol>
                 </p>
             </div>
@@ -164,18 +144,11 @@
                         </tbody>
                     </table>
                     <div align="right">
-                        <a href="#" onclick="modifyGroup()">
-                            <button class="btn btn-success">修改群</button>
+                        <a href="#" onclick="modifyGroupMem()">
+                            <button class="btn btn-success">修改群信息</button>
                         </a>
-                        <a href="#" onclick="addCreateGroupAutority()">
+                        <a href="#" onclick="qryGroupMember()">
                             <button class="btn btn-info">查看群成员</button>
-                        </a>
-                        <a href="#" onclick="resetPassword()">
-                            <button class="btn btn-warning">增加群成员</button>
-                        </a>
-                        <%--TODO:删除用户需谨慎,特定权限的管理员才能删除用户--%>
-                        <a href="#" onclick="">
-                            <button class="btn btn-danger">删除群成员</button>
                         </a>
                     </div>
                 </div>

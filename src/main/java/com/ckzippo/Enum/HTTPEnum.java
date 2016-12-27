@@ -17,7 +17,10 @@ public enum HTTPEnum {
     ADDUSERDEPT("lowi?cmd=354",7), // 新增成员和组织架构关系
     DELUSER("mod?cmd=328", 8),  // 删除用户
     QRYGROUP("qry?cmd=310", 9), //查询群列表
-    MODGROUP("mod?cmd=317", 10) //修改群信息
+    MODGROUP("mod?cmd=317", 10), //修改群信息
+    QRYGROUPMEM("qry?cmd=308", 11), // 查看群成员
+    ADDGROUPMEM("mod?cmd=318", 12), //增加群成员
+    DELGROUPMEM("mod?cmd=319", 13)  // 删除群成员
     ;
 
     private static final String URL = "http://yx.telecomjs.com:7500/";

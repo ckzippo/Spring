@@ -3,6 +3,7 @@ package com.ckzippo.util;
 import com.ckzippo.Enum.HTTPEnum;
 import com.ckzippo.deptmanage.Department;
 import com.ckzippo.groupmanage.Group;
+import com.ckzippo.groupmanage.GroupMember;
 import com.ckzippo.usermanage.User;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created with IDEA
@@ -675,6 +677,81 @@ public class InvokeHttpUtil {
         return jsonArray.getJSONObject(0).getString("USR_ID");
     }
 
+    /**
+     * 查看群成员列表
+     * @param reqid
+     * @param groupid
+     * @return
+     */
+    public static LinkedList<GroupMember> qryGroupMember(String reqid, String groupid) {
+        logger.info("查询群: " + groupid + "的成员");
+        LinkedList<GroupMember> groupMembers = new LinkedList<GroupMember>();
+        String result = null;
+        String url = HTTPEnum.QRYGROUPMEM.toString();
+        NameValuePair[] data = {
+            new NameValuePair("USR_REQ", reqid),
+            new NameValuePair("GP_ID", groupid),
+        };
+        result = Invoke(url, data);
+        JSONObject jsonObject = new JSONObject(result);
+
+        JSONArray jsonArray = jsonObject.getJSONArray("LST");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            GroupMember groupMember = new GroupMember();
+            groupMember.setGroupid(groupid);
+            groupMember.setMemberid(jsonArray.getJSONObject(i).getString("USR_ID"));
+            groupMember.setMembername(jsonArray.getJSONObject(i).getString("GPM_NAME"));
+            groupMember.setGrouprole(jsonArray.getJSONObject(i).getString("GPM_ROLE"));
+            groupMembers.add(groupMember);
+        }
+        return groupMembers;
+    }
+
+    /**
+     * 增加群成员
+     * @param reqid
+     * @param groupid
+     * @param userid
+     * @return
+     */
+    public static boolean addGroupMember(String reqid, String groupid, String userid) {
+        logger.info("用户: " + reqid + "在群: " + groupid + "增加了成员: " + userid);
+        String result = null;
+        String url = HTTPEnum.ADDGROUPMEM.toString();
+        NameValuePair[] data = {
+            new NameValuePair("USR_REQ", reqid),
+            new NameValuePair("GP_ID", groupid),
+            new NameValuePair("USR_ID", userid),
+        };
+
+        result = Invoke(url, data);
+        JSONObject jsonObject = new JSONObject(result);
+        result = jsonObject.get("RET").toString();
+        return result.equals("SUC");
+    }
+
+    /**
+     * 删除群成员
+     * @param ownerid
+     * @param groupid
+     * @param userid
+     * @return
+     */
+    public static boolean delGroupMember(String ownerid, String groupid, String userid) {
+        logger.info("用户: " + ownerid + "删除了群: " + groupid + "中的成员: " + userid);
+        String result = null;
+        String url = HTTPEnum.DELGROUPMEM.toString();
+        NameValuePair[] data = {
+            new NameValuePair("USR_REQ", ownerid),
+            new NameValuePair("GP_ID", groupid),
+            new NameValuePair("USR_ID", userid),
+        };
+        result = Invoke(url, data);
+        JSONObject jsonObject = new JSONObject(result);
+        result = jsonObject.get("RET").toString();
+        return result.equals("SUC");
+    }
+
     public static void main(String[] args) {
 //        System.out.println(InvokeHttpUtil.qryUser("lixing"));
 //        System.out.println(InvokeHttpUtil.QryUserById("29297").toString());
@@ -705,5 +782,13 @@ public class InvokeHttpUtil {
             System.out.println(user);
         }*/
 
+        String groupid = "80191";
+        String userid = "29297";
+        System.out.println(InvokeHttpUtil.delGroupMember(userid, groupid, userid));
+        LinkedList<GroupMember> groupMembers = InvokeHttpUtil.qryGroupMember("29297", "1");
+        for (GroupMember g :
+                groupMembers) {
+            System.out.println(g);
+        }
     }
 }

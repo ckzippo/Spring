@@ -5,11 +5,11 @@ import com.ckzippo.util.InvokeHttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created with IDEA
@@ -46,6 +46,7 @@ public class GroupController {
      */
     @RequestMapping("/modGroup")
     public String modGroup(HttpServletRequest request) {
+        String groupid = request.getParameter("id");
         return "modGroup";
     }
 
@@ -61,6 +62,50 @@ public class GroupController {
         String groupnote = request.getParameter("note");
         String groupid = request.getParameter("id");
         if (InvokeHttpUtil.modGroup(groupid, groupname, groupnote)) {
+            return "success";
+        } else {
+            return "error";
+        }
+    }
+
+    /**
+     * 查看群成员
+     * @param request
+     * @return
+     */
+    @RequestMapping("/qryGroupMember")
+    public String qryGroupMember(HttpServletRequest request) {
+        String groupid = request.getParameter("id");
+        LinkedList<GroupMember> groupMemberLinkedList = InvokeHttpUtil.qryGroupMember("29297", groupid);
+        if (groupMemberLinkedList != null) {
+            HttpSession httpSession = request.getSession();
+            httpSession.setAttribute(ActionEnum.QRYGRPMEM.getActionName(), groupMemberLinkedList);
+        }
+        return "qryGroupMem";
+    }
+
+    /**
+     * 增加群成员
+     * @param request
+     * @return
+     */
+    @RequestMapping("/addGroupMember")
+    public String addGroupMember(HttpServletRequest request) {
+        String groupid = request.getParameter("groupid");
+        String userid = "";
+        return null;
+    }
+
+    /**
+     * 删除群成员
+     * @param request
+     * @return
+     */
+    @RequestMapping("/delGroupMember")
+    public String delGroupMember(HttpServletRequest request) {
+        String groupid = request.getParameter("groupid");
+        String memberid = request.getParameter("memberid");
+        if (InvokeHttpUtil.delGroupMember(memberid, groupid, memberid)) {
             return "success";
         } else {
             return "error";
