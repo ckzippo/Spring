@@ -32,13 +32,7 @@
         <li class="submenu"> <a href="#"><i class="icon icon-group"></i><span>群管理</span></a>
             <ul>
                 <li><a href="/group/qryGroup">查找群</a></li>
-                <li><a href="#">修改群</a></li>
                 <li><a href="#">增加群</a></li>
-                <li><a href="#">删除群</a></li>
-                <li><a href="#">查看群成员</a></li>
-                <li><a href="#">修改群成员</a></li>
-                <li><a href="#">增加群成员</a></li>
-                <li><a href="#">删除群成员</a></li>
             </ul>
         </li>
 

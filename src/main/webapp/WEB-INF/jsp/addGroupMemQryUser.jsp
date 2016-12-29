@@ -61,13 +61,10 @@
                 <ol>
                     <li>输入用户名、账号、手机号、邮箱关键字进行搜索</li>
                     <li>关键字尽量输入长一点,以免结果太多,反应慢</li>
-                    <li>增加建群权限将使得选中的用户具有建群权限</li>
-                    <li>重置密码功能只能对非OA用户使用。<br>密码重置后,密码跟账号一致</li>
                 </ol>
                 </p>
             </div>
 
-            <jsp:useBean id="qryresult" class="com.ckzippo.usermanage.User" scope="page"/>
             <%
                ArrayList<User> resultList =
                        (ArrayList<User>) request.getSession().getAttribute(ActionEnum.QRYUSER.getActionName());

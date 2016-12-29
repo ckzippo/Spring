@@ -1,6 +1,7 @@
 package com.ckzippo.groupmanage;
 
 import com.ckzippo.Enum.ActionEnum;
+import com.ckzippo.usermanage.User;
 import com.ckzippo.util.InvokeHttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,7 +47,6 @@ public class GroupController {
      */
     @RequestMapping("/modGroup")
     public String modGroup(HttpServletRequest request) {
-        String groupid = request.getParameter("id");
         return "modGroup";
     }
 
@@ -91,9 +91,19 @@ public class GroupController {
      */
     @RequestMapping("/addGroupMember")
     public String addGroupMember(HttpServletRequest request) {
+        String goupid = request.getParameter("groupid");
+        return "addGroupMem";
+    }
+
+    @RequestMapping("/addGroupMemInvoke")
+    public String addGroupMemberInvoke(HttpServletRequest request) {
         String groupid = request.getParameter("groupid");
-        String userid = "";
-        return null;
+        String memid = request.getParameter("id");
+        if (InvokeHttpUtil.addGroupMember(memid, groupid, memid)) {
+            return "success";
+        } else {
+            return "error";
+        }
     }
 
     /**
@@ -110,5 +120,26 @@ public class GroupController {
         } else {
             return "error";
         }
+    }
+
+    @RequestMapping("/delGroup")
+    public String delGroup(HttpServletRequest request) {
+        String groupid = request.getParameter("id");
+        if (InvokeHttpUtil.delGroup("29297", groupid)) {
+            return "success";
+        } else {
+            return "error";
+        }
+    }
+
+    @RequestMapping("/qryuser")
+    public String qryUser(HttpServletRequest request) {
+        String keyword = request.getParameter("keyword");
+        if (keyword != null) {
+            ArrayList<User> queryResult = invokeHttpUtil.QryUser(keyword);
+            HttpSession httpSession = request.getSession();
+            httpSession.setAttribute(ActionEnum.QRYUSER.getActionName(), queryResult);
+        }
+        return "addGroupMemQryUser";
     }
 }

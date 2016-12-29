@@ -27,18 +27,9 @@
     <%--修改用户、重置密码、增加建群权限的JS代码--%>
     <script language="JavaScript" type="text/javascript">
 
-        // 修改用户
-        function addGroupMember() {
-            if (t == 1) {
-                showGroupmem.action = "/user/moduserFromadd";
-                showGroupmem.submit();
-            } else {
-                alert("请选择一个用户");
-            }
-        }
-
         // 删除群成员
         function delGroupMember() {
+
             var x = document.getElementsByName("memberid");
             var t = 0;
             for (var i = 0; i < x.length; i++) {
@@ -57,6 +48,13 @@
                 alert("请选择一个群成员");
             }
         }
+
+        // 新增群成员
+        function addGroupMember() {
+            showGroupmem.action = "/group/addGroupMember";
+            showGroupmem.submit();
+        }
+
     </script>
 </head>
 <body>
@@ -83,16 +81,22 @@
 
     <hr>
 
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <jsp:useBean id="result" class="com.ckzippo.groupmanage.GroupMember" scope="page"/>
+    <div class="container-fluid row-fluid">
+        <div class="span4">
+            <ol>
+                <li>选中一个群成员后,点击删除群成员可以删除群成员</li>
+                <li>点击增加群成员后可以跳转到增加群成员页面</li>
+            </ol>
+        </div>
+        <div class="span8" >
             <%
                 LinkedList<GroupMember> groupMembers =
                         (LinkedList<GroupMember>)request.getSession().getAttribute(ActionEnum.QRYGRPMEM.getActionName());
                 if (groupMembers != null) {
             %>
-            <form id="showGroupmem" name="showGroupmem" method="post">
-                <div class="span6" align="center">
+            <div class="span12">
+                <form id="showGroupmem" name="showGroupmem" method="post" class="span12">
+                <div>
                     <table class="table table-bordered table-hover data-table">
                         <thead>
                             <tr>
@@ -116,17 +120,13 @@
                             %>
                         </tbody>
                     </table>
-
-                    <div align="right">
-                        <a href="#" onclick="addGroupMember()">
-                            <button class="btn btn-info">增加群成员</button>
-                        </a>
-                        <a href="#" onclick="delGroupMember()">
-                            <button class="btn btn-danger">删除群成员</button>
-                        </a>
-                    </div>
                 </div>
             </form>
+            </div>
+            <div>
+                <button class="btn btn-info" onclick="addGroupMember()">增加群成员</button>
+                <button class="btn btn-danger" onclick="delGroupMember()">删除群成员</button>
+            </div>
             <%
                 }
             %>

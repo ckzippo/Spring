@@ -752,6 +752,27 @@ public class InvokeHttpUtil {
         return result.equals("SUC");
     }
 
+    /**
+     * 删除群
+     * @param reqid
+     * @param groupid
+     * @return
+     */
+    public static boolean delGroup(String reqid, String groupid) {
+        logger.info("用户: " + reqid + "删除了群: " + groupid);
+        String result;
+        String url = HTTPEnum.DELGROUP.toString();
+        NameValuePair[] data = {
+            new NameValuePair("USR_REQ", reqid),
+            new NameValuePair("GP_ID", groupid),
+        };
+
+        result = Invoke(url, data);
+        JSONObject jsonObject = new JSONObject(result);
+        result = jsonObject.get("RET").toString();
+        return result.equals("SUC");
+    }
+
     public static void main(String[] args) {
 //        System.out.println(InvokeHttpUtil.qryUser("lixing"));
 //        System.out.println(InvokeHttpUtil.QryUserById("29297").toString());
