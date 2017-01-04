@@ -2,6 +2,7 @@
 <%@ page import="com.ckzippo.usermanage.User" %>
 <%@ page import="com.ckzippo.Enum.ActionEnum" %>
 <%@ page import="com.ckzippo.groupmanage.Group" %>
+<%@ page import="com.ckzippo.dgpmanage.DGroup" %>
 
 <%--
   Created by IntelliJ IDEA.
@@ -13,7 +14,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>查询群</title>
+    <title>查询讨论组</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/resources/css/matrix/bootstrap.min.css" />
@@ -23,11 +24,10 @@
     <link href="/resources/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
 
-    <%--修改用户、重置密码、增加建群权限的JS代码--%>
     <script language="JavaScript" type="text/javascript">
 
-        // 修改群信息
-        function modifyGroupMem() {
+        // 查看讨论组成员
+        function qryDGroupMember() {
             var x = document.getElementsByName("id");
             var t = 0;
             for (var i = 0; i < x.length; i++) {
@@ -38,15 +38,15 @@
             }
 
             if (t == 1) {
-                showGroup.action = "/group/modGroup";
-                showGroup.submit();
+                showDGroup.action = "/dgroup/qryDGroupMember";
+                showDGroup.submit();
             } else {
-                alert("请选择一个群");
+                alert("请选择一个讨论组");
             }
         }
 
-        // 查看群成员
-        function qryGroupMember() {
+        // 删除讨论组
+        function delDGroup() {
             var x = document.getElementsByName("id");
             var t = 0;
             for (var i = 0; i < x.length; i++) {
@@ -57,29 +57,10 @@
             }
 
             if (t == 1) {
-                showGroup.action = "/group/qryGroupMember";
-                showGroup.submit();
+                showDGroup.action = "/group/delDGroup";
+                showDGroup.submit();
             } else {
-                alert("请选择一个群");
-            }
-        }
-
-        // 删除群
-        function delGroup() {
-            var x = document.getElementsByName("id");
-            var t = 0;
-            for (var i = 0; i < x.length; i++) {
-                if (x[i].checked == true) {
-                    t = 1;
-                    break;
-                }
-            }
-
-            if (t == 1) {
-                showGroup.action = "/group/delGroup";
-                showGroup.submit();
-            } else {
-                alert("请选择一个群");
+                alert("请选择一个讨论组");
             }
         }
 
@@ -101,10 +82,10 @@
                 主页
             </a>
             <a class="current">
-                查询群
+                查询讨论组
             </a>
         </div>
-        <h1>查询群</h1>
+        <h1>查询讨论组</h1>
     </div>
 
     <hr>
@@ -112,50 +93,47 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span4">
-                <form action="/group/qryGroup">
+                <form action="/dgroup/qryDGroup">
                     <input type="text" style="height: 30px" name="keyword"><br>
-                    <button class="btn btn-success">查询群</button>
+                    <button class="btn btn-success">查询讨论组</button>
                 </form>
                 <br>
                 <hr>
                 <p>
                 <ol>
-                    <li>输入群名称关键字进行搜索</li>
+                    <li>输入讨论组名称关键字进行搜索</li>
                     <li>关键字尽量输入长一点,以免结果太多,反应慢</li>
-                    <li>修改群信息可以修改群名称、请公告</li>
-                    <li>查看群成员可以展示、新增、修改群成员</li>
+                    <li>查看讨论组成员可以展示、新增、修改讨论组成员</li>
                 </ol>
                 </p>
             </div>
 
-            <jsp:useBean id="qryresult" class="com.ckzippo.groupmanage.Group" scope="page"/>
+            <jsp:useBean id="qryresult" class="com.ckzippo.dgpmanage.DGroup" scope="page"/>
             <%
-               ArrayList<Group> resultList =
-                       (ArrayList<Group>) request.getSession().getAttribute(ActionEnum.QRYGROUP.getActionName());
+               ArrayList<DGroup> resultList =
+                       (ArrayList<DGroup>) request.getSession().getAttribute(ActionEnum.QRYDGROUP.getActionName());
                 if (resultList != null) {
             %>
-            <form id="showGroup" name="showGroup" method="post">
+            <form id="showDGroup" name="showDGroup" method="post">
                 <div class="span8">
                     <%--<table class="table table-bordered table-striped with-check">--%>
                     <table class="table table-bordered table-hover data-table">
                         <thead>
                         <tr>
                             <th><i class="icon-resize-vertical"></i></th>
-                            <th>群ID</th>
-                            <th class="span4">群名称</th>
-                            <th class="span4">群公告</th>
+                            <th>讨论组ID</th>
+                            <th class="span6">讨论组名称</th>
                         </tr>
                         </thead>
                         <tbody>
                         <%
-                            for (Group group : resultList) {
+                            for (DGroup dgroup : resultList) {
                         %>
                         <tr>
-                            <td><input type="radio" id="id" name="id" value="<%=group.getId()%>"></td>
-                            <td><%=group.getId()%></td>
-                            <td><%=group.getGp_name()%></td>
-                            <td><%=group.getNote()%></td>
-                            <td style="display: none"><input type="hidden" name="acc" value="<%=group.getId()%>"></td>
+                            <td><input type="radio" id="id" name="id" value="<%=dgroup.getDgpid()%>"></td>
+                            <td><%=dgroup.getDgpid()%></td>
+                            <td><%=dgroup.getDgpname()%></td>
+                            <td style="display: none"><input type="hidden" name="acc" value="<%=dgroup.getDgpid()%>"></td>
                         </tr>
                         <%
                             }
@@ -163,14 +141,11 @@
                         </tbody>
                     </table>
                     <div align="right">
-                        <a href="#" onclick="modifyGroupMem()">
-                            <button class="btn btn-success">修改群信息</button>
+                        <a href="#" onclick="qryDGroupMember()">
+                            <button class="btn btn-info">查看讨论组成员</button>
                         </a>
-                        <a href="#" onclick="qryGroupMember()">
-                            <button class="btn btn-info">查看群成员</button>
-                        </a>
-                        <a href="#" onclick="delGroup()">
-                            <button class="btn btn-danger">删除群</button>
+                        <a href="#" onclick="delDGroup()">
+                            <button class="btn btn-danger">删除讨论组</button>
                         </a>
                     </div>
                 </div>

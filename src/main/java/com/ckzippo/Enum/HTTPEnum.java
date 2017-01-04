@@ -21,7 +21,10 @@ public enum HTTPEnum {
     QRYGROUPMEM("qry?cmd=308", 11), // 查看群成员
     ADDGROUPMEM("mod?cmd=318", 12), //增加群成员
     DELGROUPMEM("mod?cmd=319", 13),  // 删除群成员
-    DELGROUP("mod?cmd=316", 14)     // 删除群
+    DELGROUP("mod?cmd=316", 14),     // 删除群
+    QRYDGROUP("qry?cmd=304", 15),    // 查询讨论组
+    QRYDGROUPMEM("qry?cmd=309", 16), // 查询讨论组成员
+    ADDDGROUPMEM("mod?cmd=323", 17) // 新增讨论组成员
     ;
 
     private static final String URL = "http://yx.telecomjs.com:7500/";

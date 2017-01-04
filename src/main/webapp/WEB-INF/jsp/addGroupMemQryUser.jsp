@@ -22,7 +22,29 @@
     <link href="/resources/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
 
+    <script language="JavaScript" type="text/javascript">
 
+        // 增加用户
+        function addMemtoGroup() {
+            var x = document.getElementsByName("id");
+            var t = 0;
+            for (var i = 0; i < x.length; i++) {
+                if (x[i].checked == true) {
+                    t = 1;
+                    break;
+                }
+            }
+
+            if (t == 1) {
+                var groupid = '<%=request.getParameter("groupid")%>';
+                showUser.action = "/group/addGroupMemInvoke?groupid="+ groupid;
+                showUser.submit();
+            } else {
+                alert("请选择一个用户");
+            }
+        }
+
+    </script>
 </head>
 <body>
 <%--header--%>
@@ -96,29 +118,18 @@
                             <td><%=user.getMobilephone()%></td>
                             <td><%=user.getDeptname()%></td>
                             <td style="display: none"><input type="hidden" name="acc" value="<%=user.getUseracc()%>"></td>
+                            <td style="display: none"><input type="hidden" name="groupid" value="<%=request.getParameter("groupid")%>"></td>
                         </tr>
                         <%
                             }
                         %>
                         </tbody>
                     </table>
-                    <div align="right">
-                        <a href="#" onclick="modifyUser()">
-                            <button class="btn btn-success">修改用户</button>
-                        </a>
-                        <a href="#" onclick="addCreateGroupAutority()">
-                            <button class="btn btn-info">增加建群权限</button>
-                        </a>
-                        <a href="#" onclick="resetPassword()">
-                            <button class="btn btn-warning">重置密码</button>
-                        </a>
-                        <%--TODO:删除用户需谨慎,特定权限的管理员才能删除用户--%>
-                        <a href="#" onclick="">
-                            <button class="btn btn-danger">删除用户</button>
-                        </a>
-                    </div>
                 </div>
             </form>
+            <div align="right">
+                <button class="btn btn-success" onclick="addMemtoGroup()">加入到群</button>
+            </div>
             <%
                 }
             %>
@@ -128,70 +139,6 @@
 </div>
 
 <%@include file="footer.jsp"%>
-<%--修改用户、重置密码、增加建群权限的JS代码--%>
-<script language="JavaScript" type="text/javascript">
-
-    // 修改用户
-    function modifyUser() {
-        var x = document.getElementsByName("id");
-        var t = 0;
-        for (var i = 0; i < x.length; i++) {
-            if (x[i].checked == true) {
-                t = 1;
-                break;
-            }
-        }
-
-        if (t == 1) {
-            showUser.action = "/user/moduserFromadd";
-            showUser.submit();
-        } else {
-            alert("请选择一个用户");
-        }
-    }
-
-    // 增加建群权限
-    function addCreateGroupAutority() {
-        var x = document.getElementsByName("id");
-        var t = 0;
-        for (var i = 0; i < x.length; i++) {
-            if (x[i].checked == true) {
-                t = 1;
-                break;
-            }
-        }
-
-        if (t == 1) {
-            showUser.action = "/user/addCreateGroupAuth";
-            showUser.submit();
-        } else {
-            alert("请选择一个用户");
-        }
-    }
-
-    /**
-     * 重置密码
-     */
-    function resetPassword() {
-        var x = document.getElementsByName("id");
-        var t = 0;
-        for (var i = 0; i < x.length; i++) {
-            if (x[i].checked == true) {
-                t = 1;
-                break;
-            }
-        }
-
-        if (t == 1) {
-            showUser.action = "/user/resetpassword";
-            showUser.submit();
-        } else {
-            alert("请选择一个用户");
-        }
-    }
-
-
-</script>
 
 <%--去除session--%>
 <%--<%--%>

@@ -1,6 +1,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.ckzippo.usermanage.User" %>
 <%@ page import="com.ckzippo.Enum.ActionEnum" %>
+<%@ page isELIgnored="false" %>
+
 
 <%--
   Created by IntelliJ IDEA.
@@ -22,11 +24,8 @@
     <link href="/resources/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
 
-    <%--修改用户、重置密码、增加建群权限的JS代码--%>
-    <script language="JavaScript" type="text/javascript">
-
-        // 增加用户
-        function addMemtoGroup() {
+    <script type="text/javascript">
+        function addMemtoDGroup() {
             var x = document.getElementsByName("id");
             var t = 0;
             for (var i = 0; i < x.length; i++) {
@@ -37,17 +36,35 @@
             }
 
             if (t == 1) {
-                var groupid = '<%=request.getParameter("groupid")%>';
-                showUser.action = "/group/addGroupMemInvoke?groupid="+ groupid;
+                var dgroupid="${dgroupid}";
+                showUser.action = "/dgroup/addDGroupMemInvoke?dgroupid=" + dgroupid;
                 showUser.submit();
             } else {
                 alert("请选择一个用户");
             }
         }
-
     </script>
 </head>
 <body>
+<script type="text/javascript">
+    function test() {
+        alert("OK");
+        var x = document.getElementsByName("id");
+        alert(x);
+        var t = 0;
+        for (var i = 0; i < x.length; i++) {
+            if (x[i].checked == true) {
+                t = 1;
+                break;
+            }
+        }
+        alert(t);
+        if(t == 1) {
+            var dgroupid=${dgroupid};
+            alert(dgroupid);
+        }
+    }
+</script>
 <%--header--%>
 <%@include file="header.jsp"%>
 
@@ -63,10 +80,10 @@
                 主页
             </a>
             <a class="current">
-                新增群成员
+                查询用户
             </a>
         </div>
-        <h1>新增群成员</h1>
+        <h1>查询用户</h1>
     </div>
 
     <hr>
@@ -74,18 +91,16 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span4">
-                <form action="/group/qryuser">
+                <form action="/dgroup/qryuser" id="qryuser">
                     <input type="text" style="height: 30px" name="keyword"><br>
-                    <input type="hidden" name="groupid" value="<%=request.getParameter("groupid")%>">
-                    <button class="btn btn-success">新增群成员</button>
+                    <button class="btn btn-success">查询用户</button>
                 </form>
                 <br>
                 <hr>
                 <p>
                 <ol>
-                    <li><%=request.getParameter("groupid")%>输入用户名、账号、手机号、邮箱关键字搜索一个用户</li>
+                    <li>输入用户名、账号、手机号、邮箱关键字进行搜索</li>
                     <li>关键字尽量输入长一点,以免结果太多,反应慢</li>
-                    <li>选择用户后,点击加入到群即可</li>
                 </ol>
                 </p>
             </div>
@@ -121,7 +136,7 @@
                             <td><%=user.getMobilephone()%></td>
                             <td><%=user.getDeptname()%></td>
                             <td style="display: none"><input type="hidden" name="acc" value="<%=user.getUseracc()%>"></td>
-                            <td style="display: none"><input type="hidden" name="groupid" value="<%=request.getParameter("groupid")%>"></td>
+                            <td style="display: none"><input type="hidden" name="dgroupid" value="${dgroupid}"></td>
                         </tr>
                         <%
                             }
@@ -131,7 +146,7 @@
                 </div>
             </form>
             <div align="right">
-                <button class="btn btn-success" onclick="addMemtoGroup()">加入到群</button>
+                <button class="btn btn-success" onclick="addMemtoDGroup()">加入讨论组</button>
             </div>
             <%
                 }
@@ -142,6 +157,8 @@
 </div>
 
 <%@include file="footer.jsp"%>
+<%--修改用户、重置密码、增加建群权限的JS代码--%>
+
 
 <%--去除session--%>
 <%--<%--%>

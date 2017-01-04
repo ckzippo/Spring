@@ -16,7 +16,9 @@ public enum ActionEnum {
     ADDUSER("adduser", 4),
     QRYGROUP("qrygroup", 5),
     MODGROUP("modgroup", 6),
-    QRYGRPMEM("qrygroupmem", 7)
+    QRYGRPMEM("qrygroupmem", 7),
+    QRYDGROUP("qrydgroup", 8),
+    QRYDGPMEM("qrydgoupmem", 9)
     ;
 
     private String actionName;

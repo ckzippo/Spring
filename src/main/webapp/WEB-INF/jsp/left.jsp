@@ -38,14 +38,8 @@
 
         <li class="submenu"> <a href="#"><i class="icon icon-group"></i><span>讨论组管理</span></a>
             <ul>
-                <li><a href="#">查找讨论组</a></li>
-                <li><a href="#">修改讨论组</a></li>
+                <li><a href="/dgroup/qryDGroup">查找讨论组</a></li>
                 <li><a href="#">增加讨论组</a></li>
-                <li><a href="#">删除讨论组</a></li>
-                <li><a href="#">查看讨论组成员</a></li>
-                <li><a href="#">修改讨论组成员</a></li>
-                <li><a href="#">增加讨论组成员</a></li>
-                <li><a href="#">删除讨论组成员</a></li>
             </ul>
         </li>
 

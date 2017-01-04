@@ -2,6 +2,8 @@ package com.ckzippo.util;
 
 import com.ckzippo.Enum.HTTPEnum;
 import com.ckzippo.deptmanage.Department;
+import com.ckzippo.dgpmanage.DGroup;
+import com.ckzippo.dgpmanage.DGroupMember;
 import com.ckzippo.groupmanage.Group;
 import com.ckzippo.groupmanage.GroupMember;
 import com.ckzippo.usermanage.User;
@@ -25,7 +27,8 @@ import java.util.LinkedList;
  */
 @Component
 public class InvokeHttpUtil {
-    private static final Logger logger = Logger.getLogger(InvokeHttpUtil.class.getName());
+    private static final Logger logger =
+            Logger.getLogger(InvokeHttpUtil.class.getName());
 
     /**
      * 调用服务器提供的http接口
@@ -341,7 +344,6 @@ public class InvokeHttpUtil {
      * @param id
      * @return
      */
-    //TODO:如果查询根节点,则不带ID
     public static ArrayList<Department> QryChildDeptById(String id) {
         logger.info("根据ID: "+id + "查询了子部门");
         ArrayList<Department> departments = new ArrayList<Department>();
@@ -456,7 +458,7 @@ public class InvokeHttpUtil {
                 }
 
                 if (userObject.has("AVATAR")) {
-                    user.setAvatar(Integer.valueOf(userObject.getString("AVATAR")));
+                    user.setAvatar(Integer.parseInt(userObject.getString("AVATAR")));
                 }
 
                 if (userObject.has("SEX")) {
@@ -554,7 +556,7 @@ public class InvokeHttpUtil {
                 JSONObject groupObject = new JSONObject(jsonArray.get(i).toString());
 
                 if (groupObject.has("GP_ID")) {
-                    group.setId(Integer.valueOf(groupObject.get("GP_ID").toString()));
+                    group.setId(Integer.parseInt(groupObject.get("GP_ID").toString()));
                 }
 
                 if (groupObject.has("GP_NAME")) {
@@ -572,6 +574,7 @@ public class InvokeHttpUtil {
             return null;
         }
     }
+
 
     /**
      * 根据群ID查询群信息
@@ -602,7 +605,7 @@ public class InvokeHttpUtil {
                 if (groupJson.has("GP_NOTE")) {
                     group.setNote(groupJson.get("GP_NOTE").toString());
                 }
-                group.setId(Integer.valueOf(id));
+                group.setId(Integer.parseInt(id));
             }
             return group;
         } else {
@@ -773,6 +776,106 @@ public class InvokeHttpUtil {
         return result.equals("SUC");
     }
 
+
+    /**
+     * 查询讨论组
+     * @param name
+     * @return
+     */
+    public static ArrayList<DGroup> QryDGroupByName(String name) {
+        logger.info("根据" + name + "查询讨论组列表");
+        String result;
+        String url = HTTPEnum.QRYDGROUP.toString();
+
+        ArrayList<DGroup> groups = new ArrayList<DGroup>();
+
+        NameValuePair[] data = {
+                new NameValuePair("USR_REQ", "29297"),
+                new NameValuePair("WILDCARDS", name),
+        };
+        result = Invoke(url, data);
+        if (!result.startsWith("{"))
+            return null;
+        JSONObject jsonObject = new JSONObject(result);
+        if (jsonObject.get("RET").toString().equals("SUC")) {
+            if (!jsonObject.has("LST") || jsonObject.get("LST").equals(null)) {
+                return null;
+            }
+            JSONArray jsonArray = jsonObject.getJSONArray("LST");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                DGroup dgroup = new DGroup();
+                JSONObject groupObject = new JSONObject(jsonArray.get(i).toString());
+
+                if (groupObject.has("DGP_ID")) {
+                    dgroup.setDgpid(groupObject.get("DGP_ID").toString());
+                }
+
+                if (groupObject.has("DGP_NAME")) {
+                    dgroup.setDgpname(groupObject.get("DGP_NAME").toString());
+                }
+
+                logger.info(dgroup);
+                groups.add(dgroup);
+            }
+            return groups;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 查询讨论组成员
+     * @param reqid
+     * @param dgroupid
+     * @return
+     */
+    public static LinkedList<DGroupMember> qryDGroupMember(String reqid, String dgroupid) {
+        logger.info("查询讨论组: " + dgroupid + "的成员");
+        LinkedList<DGroupMember> groupMembers = new LinkedList<DGroupMember>();
+        String result = null;
+        String url = HTTPEnum.QRYDGROUPMEM.toString();
+        NameValuePair[] data = {
+                new NameValuePair("USR_REQ", reqid),
+                new NameValuePair("DGP_ID", dgroupid),
+        };
+        result = Invoke(url, data);
+        JSONObject jsonObject = new JSONObject(result);
+
+        JSONArray jsonArray = jsonObject.getJSONArray("LST");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            DGroupMember dGroupMember = new DGroupMember();
+            dGroupMember.setDgpid(dgroupid);
+            dGroupMember.setId(jsonArray.getJSONObject(i).getString("USR_ID"));
+            dGroupMember.setName(jsonArray.getJSONObject(i).getString("USR_NAME"));
+            groupMembers.add(dGroupMember);
+        }
+        return groupMembers;
+    }
+
+
+    /**
+     * 增加讨论组成员
+     * @param reqid
+     * @param groupid
+     * @param userid
+     * @return
+     */
+    public static boolean addDGroupMember(String reqid, String groupid, String userid) {
+        logger.info("用户: " + reqid + "在讨论组: " + groupid + "增加了成员: " + userid);
+        String result = null;
+        String url = HTTPEnum.ADDDGROUPMEM.toString();
+        NameValuePair[] data = {
+                new NameValuePair("USR_REQ", reqid),
+                new NameValuePair("DGP_ID", groupid),
+                new NameValuePair("USR_ID", userid),
+        };
+
+        result = Invoke(url, data);
+        JSONObject jsonObject = new JSONObject(result);
+        result = jsonObject.get("RET").toString();
+        return result.equals("SUC");
+    }
+
     public static void main(String[] args) {
 //        System.out.println(InvokeHttpUtil.qryUser("lixing"));
 //        System.out.println(InvokeHttpUtil.QryUserById("29297").toString());
@@ -805,6 +908,12 @@ public class InvokeHttpUtil {
 
         String groupid = "80191";
         String userid = "29297";
+        String name = "测试";
+        ArrayList<DGroup> dGroups = InvokeHttpUtil.QryDGroupByName(name);
+        for (DGroup d :
+                dGroups) {
+            System.out.println(d);
+        }
         System.out.println(InvokeHttpUtil.delGroupMember(userid, groupid, userid));
         LinkedList<GroupMember> groupMembers = InvokeHttpUtil.qryGroupMember("29297", "1");
         for (GroupMember g :

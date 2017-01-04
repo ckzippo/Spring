@@ -50,7 +50,6 @@ public class GroupController {
         return "modGroup";
     }
 
-    //TODO 查看群成员,是否需要定义群成员数据结构
     /**
      * 调用 HTTP 接口修改群信息
      * @param request
