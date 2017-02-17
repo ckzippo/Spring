@@ -1,8 +1,6 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.ckzippo.usermanage.User" %>
 <%@ page import="com.ckzippo.Enum.ActionEnum" %>
-<%@ page import="com.ckzippo.groupmanage.Group" %>
-<%@ page import="com.ckzippo.dgpmanage.DGroup" %>
 
 <%--
   Created by IntelliJ IDEA.
@@ -14,7 +12,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>查询讨论组</title>
+    <title>查询用户</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/resources/css/matrix/bootstrap.min.css" />
@@ -24,47 +22,7 @@
     <link href="/resources/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
 
-    <script language="JavaScript" type="text/javascript">
 
-        // 查看讨论组成员
-        function qryDGroupMember() {
-            var x = document.getElementsByName("id");
-            var t = 0;
-            for (var i = 0; i < x.length; i++) {
-                if (x[i].checked == true) {
-                    t = 1;
-                    break;
-                }
-            }
-
-            if (t == 1) {
-                showDGroup.action = "/dgroup/qryDGroupMember";
-                showDGroup.submit();
-            } else {
-                alert("请选择一个讨论组");
-            }
-        }
-
-        // 删除讨论组
-        function delDGroup() {
-            var x = document.getElementsByName("id");
-            var t = 0;
-            for (var i = 0; i < x.length; i++) {
-                if (x[i].checked == true) {
-                    t = 1;
-                    break;
-                }
-            }
-
-            if (t == 1) {
-                showDGroup.action = "/group/delDGroup";
-                showDGroup.submit();
-            } else {
-                alert("请选择一个讨论组");
-            }
-        }
-
-    </script>
 </head>
 <body>
 <%--header--%>
@@ -82,10 +40,10 @@
                 主页
             </a>
             <a class="current">
-                查询讨论组
+                调整组织架构成员
             </a>
         </div>
-        <h1>查询讨论组</h1>
+        <h1>查询需要调整组织架构的成员</h1>
     </div>
 
     <hr>
@@ -93,47 +51,53 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span4">
-                <form action="/dgroup/qryDGroup">
+                <form action="/dept/adjustDeptMember">
                     <input type="text" style="height: 30px" name="keyword"><br>
-                    <button class="btn btn-success">查询讨论组</button>
+                    <button class="btn btn-success">查询用户</button>
                 </form>
                 <br>
                 <hr>
                 <p>
                 <ol>
-                    <li>输入讨论组名称关键字进行搜索</li>
+                    <li>输入用户名、账号、手机号、邮箱关键字进行搜索</li>
                     <li>关键字尽量输入长一点,以免结果太多,反应慢</li>
-                    <li>查看讨论组成员可以展示、新增、修改讨论组成员</li>
                 </ol>
                 </p>
             </div>
 
-            <jsp:useBean id="qryresult" class="com.ckzippo.dgpmanage.DGroup" scope="page"/>
+            <jsp:useBean id="qryresult" class="com.ckzippo.usermanage.User" scope="page"/>
             <%
-               ArrayList<DGroup> resultList =
-                       (ArrayList<DGroup>) request.getSession().getAttribute(ActionEnum.QRYDGROUP.getActionName());
+               ArrayList<User> resultList =
+                       (ArrayList<User>) request.getSession().getAttribute(ActionEnum.ADJDEPTMEMQRYUSER.getActionName());
                 if (resultList != null) {
             %>
-            <form id="showDGroup" name="showDGroup" method="post">
+            <form id="showUser" name="showUser" method="post">
                 <div class="span8">
                     <%--<table class="table table-bordered table-striped with-check">--%>
                     <table class="table table-bordered table-hover data-table">
                         <thead>
                         <tr>
                             <th><i class="icon-resize-vertical"></i></th>
-                            <th>讨论组ID</th>
-                            <th class="span6">讨论组名称</th>
+                            <th>用户姓名</th>
+                            <th>登录账号</th>
+                            <th>用户ID</th>
+                            <th>手机号</th>
+                            <th>部门</th>
                         </tr>
                         </thead>
                         <tbody>
                         <%
-                            for (DGroup dgroup : resultList) {
+                            for (User user : resultList) {
                         %>
                         <tr>
-                            <td><input type="radio" id="id" name="id" value="<%=dgroup.getDgpid()%>"></td>
-                            <td><%=dgroup.getDgpid()%></td>
-                            <td><%=dgroup.getDgpname()%></td>
-                            <td style="display: none"><input type="hidden" name="acc" value="<%=dgroup.getDgpid()%>"></td>
+                            <td><input type="radio" id="id" name="id" value="<%=user.getUserid()%>"></td>
+                            <td><%=user.getUsername()%></td>
+                            <td><%=user.getUseracc()%></td>
+                            <td><%=user.getUserid()%></td>
+                            <td><%=user.getMobilephone()%></td>
+                            <td><%=user.getDeptname()%></td>
+f                            <td style="display: none"><input type="hidden" name="acc" value="<%=user.getUseracc()%>"></td>
+                            <td style="display: none"><input type="hidden" name="olddeptid" value="<%=user.getDeptid()%>"></td>
                         </tr>
                         <%
                             }
@@ -141,17 +105,14 @@
                         </tbody>
                     </table>
                     <div align="right">
-                        <a href="#" onclick="qryDGroupMember()">
-                            <button class="btn btn-info">查看讨论组成员</button>
-                        </a>
-                        <a href="#" onclick="delDGroup()">
-                            <button class="btn btn-danger">删除讨论组</button>
+                        <a href="#" onclick="modifyUser()">
+                            <button class="btn btn-success">选择用户</button>
                         </a>
                     </div>
                 </div>
             </form>
             <%
-                    request.getSession().removeAttribute(ActionEnum.QRYDGROUP.getActionName());
+                    request.getSession().removeAttribute(ActionEnum.ADJDEPTMEMQRYUSER.getActionName());
                 }
             %>
         </div>
@@ -160,6 +121,30 @@
 </div>
 
 <%@include file="footer.jsp"%>
+<%--修改用户、重置密码、增加建群权限的JS代码--%>
+<script language="JavaScript" type="text/javascript">
+
+    // 修改用户
+    function modifyUser() {
+        var x = document.getElementsByName("id");
+        var t = 0;
+        for (var i = 0; i < x.length; i++) {
+            if (x[i].checked == true) {
+                t = 1;
+                break;
+            }
+        }
+
+        if (t == 1) {
+            showUser.action = "/dept/selectDept";
+            showUser.submit();
+        } else {
+            alert("请选择一个用户");
+        }
+    }
+
+
+</script>
 
 <%--去除session--%>
 <%--<%--%>

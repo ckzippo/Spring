@@ -13,8 +13,10 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,6 +31,9 @@ import java.util.LinkedList;
 public class InvokeHttpUtil {
     private static final Logger logger =
             Logger.getLogger(InvokeHttpUtil.class.getName());
+
+    @Autowired
+    private HttpServletRequest request;
 
     /**
      * 调用服务器提供的http接口
@@ -87,7 +92,6 @@ public class InvokeHttpUtil {
      * @return
      */
     public static ArrayList<User> QryUser(String keyword) {
-        logger.info("查询关键字:" + keyword);
         ArrayList<User> arrayList = new ArrayList<User>();
         String result;
 
@@ -239,7 +243,6 @@ public class InvokeHttpUtil {
      * @return
      */
     public static boolean ModUser(User user) {
-        logger.info("修改了用户: " + user);
         String result;
         String url = HTTPEnum.MODUSER.toString();
         NameValuePair[] data = {
@@ -299,7 +302,6 @@ public class InvokeHttpUtil {
      * @return
      */
     public static boolean AddUserDept(String reqid, String deptid, String userid) {
-        logger.info("在组织架构: " + deptid + "新增了成员和组织架构关系: " + userid);
         String url = HTTPEnum.ADDUSERDEPT.toString();
         String result;
         NameValuePair[] data = {
@@ -308,6 +310,29 @@ public class InvokeHttpUtil {
             new NameValuePair("USR_ID", userid),
         };
 
+        result = Invoke(url, data);
+        if (!result.startsWith("{"))
+            return false;
+        JSONObject jsonObject = new JSONObject(result);
+        result = jsonObject.get("RET").toString();
+        return result.equals("SUC");
+    }
+
+    /**
+     * 删除组织架构和人员的关系。 注意: 此接口在RL_Staffdept表中删除了人员和组织架构的映射关系
+     * @param reqid 请求者id
+     * @param deptid 组织架构id
+     * @param userid 待删除的用户id
+     * @return
+     */
+    public static boolean delUserDept(String reqid, String deptid, String userid) {
+        String url = HTTPEnum.DELUSERDEPT.toString();
+        String result;
+        NameValuePair[] data = {
+            new NameValuePair("USR_REQ", reqid),
+            new NameValuePair("DEPT_ID", deptid),
+            new NameValuePair("USR_ID", userid),
+        };
         result = Invoke(url, data);
         if (!result.startsWith("{"))
             return false;
@@ -508,7 +533,6 @@ public class InvokeHttpUtil {
      * @return 成功 true, 失败 false
      */
     public static boolean grantUser(String id, String role) {
-        logger.info("为ID: " + id + "增加了权限: " + role);
         String result;
         String url = HTTPEnum.GRANTUSER.toString();
 
@@ -532,7 +556,6 @@ public class InvokeHttpUtil {
      * @return
      */
     public static ArrayList<Group> QryGroupByName(String name) {
-        logger.info("根据" + name + "查询群列表");
         String result;
         String url = HTTPEnum.QRYGROUP.toString();
 
@@ -619,7 +642,6 @@ public class InvokeHttpUtil {
      * @return 成功 true, 失败 false
      */
     public static boolean resetPassword(String id, String password) {
-        logger.info("重置了 " + id + "的密码");
         String result;
         String url = HTTPEnum.RESETPW.toString();
 
@@ -644,7 +666,6 @@ public class InvokeHttpUtil {
      * @return
      */
     public static boolean modGroup(String groupid, String groupname, String groupnote) {
-        logger.info("修改群:" + groupid + "名称为: " + groupname + " 群公告: "+groupnote);
         String result = null;
         String url = HTTPEnum.MODGROUP.toString();
         NameValuePair[] data = {
@@ -687,7 +708,6 @@ public class InvokeHttpUtil {
      * @return
      */
     public static LinkedList<GroupMember> qryGroupMember(String reqid, String groupid) {
-        logger.info("查询群: " + groupid + "的成员");
         LinkedList<GroupMember> groupMembers = new LinkedList<GroupMember>();
         String result = null;
         String url = HTTPEnum.QRYGROUPMEM.toString();
@@ -876,6 +896,9 @@ public class InvokeHttpUtil {
         return result.equals("SUC");
     }
 
+
+
+
     public static void main(String[] args) {
 //        System.out.println(InvokeHttpUtil.qryUser("lixing"));
 //        System.out.println(InvokeHttpUtil.QryUserById("29297").toString());
@@ -906,7 +929,7 @@ public class InvokeHttpUtil {
             System.out.println(user);
         }*/
 
-        String groupid = "80191";
+        /*String groupid = "80191";
         String userid = "29297";
         String name = "测试";
         ArrayList<DGroup> dGroups = InvokeHttpUtil.QryDGroupByName(name);
@@ -919,6 +942,11 @@ public class InvokeHttpUtil {
         for (GroupMember g :
                 groupMembers) {
             System.out.println(g);
-        }
+        }*/
+
+        String userid = "80183";
+        String deptid = "";
+//        InvokeHttpUtil.AddUserDept("29297", "992", userid);
+        System.out.println(InvokeHttpUtil.delUserDept("29297", deptid, userid));
     }
 }

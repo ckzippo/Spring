@@ -177,6 +177,7 @@
             </form>
             <%
                 }
+                request.getSession().getAttribute(ActionEnum.QRYGROUP.getActionName());
             %>
         </div>
 

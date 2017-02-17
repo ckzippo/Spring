@@ -128,6 +128,7 @@
                 <button class="btn btn-danger" onclick="delDGroupMember()">删除讨论组成员</button>
             </div>
             <%
+                    request.getSession().removeAttribute(ActionEnum.QRYDGPMEM.getActionName());
                 }
             %>
     </div>

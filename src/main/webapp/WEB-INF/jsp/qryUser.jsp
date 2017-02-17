@@ -51,7 +51,7 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span4">
-                <form action="/group/qryuser">
+                <form action="/user/qryuser">
                     <input type="text" style="height: 30px" name="keyword"><br>
                     <button class="btn btn-success">查询用户</button>
                 </form>
@@ -123,6 +123,7 @@
                 </div>
             </form>
             <%
+                    request.getSession().removeAttribute(ActionEnum.QRYUSER.getActionName());
                 }
             %>
         </div>

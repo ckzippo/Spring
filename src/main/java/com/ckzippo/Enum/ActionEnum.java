@@ -18,7 +18,9 @@ public enum ActionEnum {
     MODGROUP("modgroup", 6),
     QRYGRPMEM("qrygroupmem", 7),
     QRYDGROUP("qrydgroup", 8),
-    QRYDGPMEM("qrydgoupmem", 9)
+    QRYDGPMEM("qrydgoupmem", 9),
+    ADJDEPTMEMQRYUSER("adjdeptmemqryuser", 10),
+    ADJDEPTMEMUSERID("adjdeptmuserid", 11)
     ;
 
     private String actionName;

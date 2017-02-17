@@ -14,6 +14,7 @@ public enum SessionEnum {
     DEPTID("deptid", 5), //管理员能够修改的最高部门ID
     ADUSERDEPTPATH("deptpath", 6), //添加成员时的部门路径
     LASTDEPTID("lastdeptid", 7), //添加成员时的上一个部门节点
+    ADJDEPTOLDDEPT("adjdeptolddept", 8) //调整成员所属部门时的老的部门ID
     ;
 
     private String sessionName;

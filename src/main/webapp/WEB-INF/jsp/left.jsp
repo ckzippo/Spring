@@ -45,14 +45,8 @@
 
         <li class="submenu"> <a href="#"><i class="icon icon-bell"></i><span>组织架构管理</span></a>
             <ul>
-                <li><a href="#">查找组织架构</a></li>
-                <li><a href="#">修改组织架构</a></li>
-                <li><a href="#">增加组织架构</a></li>
-                <li><a href="#">删除组织架构</a></li>
-                <li><a href="#">查看组织架构成员</a></li>
-                <li><a href="#">增加组织架构成员</a></li>
-                <li><a href="#">删除组织架构成员</a></li>
-                <li><a href="#">调整组织架构成员</a></li>
+                <li><a href="/dept/showDept">查看组织架构</a></li>
+                <li><a href="/dept/adjustDeptMember">调整组织架构成员</a></li>
             </ul>
         </li>
         <li class="submenu"><a href="#"><i class="icon icon-save"></i><span>运行统计</span> </a>

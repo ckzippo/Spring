@@ -24,7 +24,8 @@ public enum HTTPEnum {
     DELGROUP("mod?cmd=316", 14),     // 删除群
     QRYDGROUP("qry?cmd=304", 15),    // 查询讨论组
     QRYDGROUPMEM("qry?cmd=309", 16), // 查询讨论组成员
-    ADDDGROUPMEM("mod?cmd=323", 17) // 新增讨论组成员
+    ADDDGROUPMEM("mod?cmd=323", 17), // 新增讨论组成员
+    DELUSERDEPT("lowi?cmd=355", 18) // 删除组织架构成员
     ;
 
     private static final String URL = "http://yx.telecomjs.com:7500/";
